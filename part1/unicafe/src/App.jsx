@@ -22,11 +22,18 @@ const App = () => {
     setBad(increment);
   };
 
-  const total = good + neutral + bad;
+  // const clickEventHandlers = {
+  //   good: handleGoodClick,
+  //   neutral: handleNeutralClick,
+  //   bad: handleBadClick,
+  // };
 
-  // If total > 0:
-  const average = (good*1 + neutral*0 + bad*-1) / total;
-  const positive = good / total;
+  const statisticValues = {
+    good: good,
+    neutral: neutral,
+    bad: bad,
+  };
+
 
   return (
     <>
@@ -34,12 +41,7 @@ const App = () => {
         <Button onClick={handleGoodClick} text={"good"} />
         <Button onClick={handleNeutralClick} text={"neutral"} />
         <Button onClick={handleBadClick} text={"bad"} />
-      <h2>statistics</h2>
-        <Statistic text={"good"} value={good} />
-        <Statistic text={"neutral"} value={neutral} />
-        <Statistic text={"bad"} value={bad} />
-        <Statistic text={"average"} value={average} />
-        <Statistic text={"positive"} value={positive} />
+      <Statistics statisticValues={statisticValues}/>
     </>
   );
 };
@@ -48,7 +50,31 @@ const Button = ({ onClick, text }) => {
   return <button onClick={onClick}>{text}</button>;
 };
 
-const Statistic = ({ text, value }) => {
+const Statistics = ({statisticValues}) => {
+  const { good, neutral, bad } = statisticValues;
+  const total = good + neutral + bad;
+
+  let average = 0;
+  let positive = 1;
+
+  if (total  > 0 ) {
+    average = (good*1 + neutral*0 + bad*-1) / total;
+    positive = good / total;
+  }
+
+  return (
+    <>
+        <h2>statistics</h2>
+        <DataPoint text={"good"} value={good} />
+        <DataPoint text={"neutral"} value={neutral} />
+        <DataPoint text={"bad"} value={bad} />
+        <DataPoint text={"average"} value={average} />
+        <DataPoint text={"positive"} value={positive} />
+    </>
+  );
+};
+
+const DataPoint = ({ text, value }) => {
   return (
     <p>
       {text}: {value}
