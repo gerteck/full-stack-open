@@ -69,16 +69,16 @@ const Statistics = ({statisticValues}) => {
   return (
     <>
         <h2>statistics</h2>
-        <DataPoint text={"good"} value={good} />
-        <DataPoint text={"neutral"} value={neutral} />
-        <DataPoint text={"bad"} value={bad} />
-        <DataPoint text={"average"} value={average} />
-        <DataPoint text={"positive"} value={positive} />
+        <StatisticLine text="good" value={good} />
+        <StatisticLine text="neutral" value={neutral} />
+        <StatisticLine text="bad" value={bad} />
+        <StatisticLine text="average" value={average} />
+        <StatisticLine text="positive" value={positive} />
     </>
   );
 };
 
-const DataPoint = ({ text, value }) => {
+const StatisticLine = ({ text, value }) => {
   return (
     <p>
       {text}: {value}
