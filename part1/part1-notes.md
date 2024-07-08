@@ -141,4 +141,40 @@ At this point, some tips for refactoring include:
 
 ### More Complex State, Debugging React Apps
 
+**Complex State**
+
+In a more complex state, (e.g. keeping track of state of multiple variables), we could accomplish such by using the `useState` function multiple times to create separate "pieces" of state.
+* We could also save it into a single object.
+* Define it neatly by using the *object spread* syntax:
+* `{... clicks, prop: value}` creates a new object that has all copies of the `clicks` object, and we can overwrite accordingly.
+
+It is also forbidden in React to mutate states directly. (without use of `setState` function), can result in unexpected [side effects](https://stackoverflow.com/questions/37755997/why-cant-i-directly-modify-a-components-state-really/40309023#40309023).
+    * You lose control of `state` across components. Calling `setState()` afterwards may also replace mutation made.
+    * When you scale, it become unmanageable code.
+    * Instead of React, you will be writing custom codes over React.
+    * Treat state as if it were immutable.
+    * `setState()` does not immediately mutate `state`, but creates a pending state transition. Always triggers re-redner unless conditional rendering logic implemented in `shouldComponentUpdate()`.
+
+**Handling Arrays**
+
+* Use `concat` method to add new item to array which does not mutate existing array but return new copy of array.
+
+**Understanding State**
+
+* Update of the state is asynchronous.
+  * A state update in React happens asynchronously, i.e. not immediately but "at some point" before the component is rendered again.
+* Conditional Rendering: Use `if` to do conditional rendering is one way.
+
+**Debugging React Applications**
+
+Love debugging and reading existing code! A large part of time we spend figuring out why something is broken or how something works. Awesome words. React is developer friendly when it comes it debugging.
+* Always fix bugs immediately.
+* Old school print based debugging is not a bad idea.
+* We can also use the debugger. Write command `debugger` in your code. Allows us to execute code line by line.
+* Add 'React Developer Tools' extension to Chrome. Shows React elements, along with state and props.
+* **Rules of Hooks:** `useState` function, `useEffect` must not be called inside of loop, conditional expression or any place that is not function defining a component. 
+  * This is to ensure hooks are always called in the same order. 
+* **Event Handling**: Try not to define event handlers directly in attribute of button.
+* **Function that returns function**: We can use this for event handlers to make custom function templates.
+* Do not define components withint components.
 
