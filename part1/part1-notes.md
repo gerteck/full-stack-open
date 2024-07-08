@@ -178,3 +178,17 @@ Love debugging and reading existing code! A large part of time we spend figuring
 * **Function that returns function**: We can use this for event handlers to make custom function templates.
 * Do not define components withint components.
 
+
+--- 
+
+### Shortcuts
+
+Create New React Application
+
+```bash
+# npm 7+, extra double-dash is needed:
+npm create vite@latest <name> -- --template react
+cd <name>
+npm install
+npm run dev
+```
