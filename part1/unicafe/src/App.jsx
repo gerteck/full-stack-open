@@ -22,6 +22,12 @@ const App = () => {
     setBad(increment);
   };
 
+  const total = good + neutral + bad;
+
+  // If total > 0:
+  const average = (good*1 + neutral*0 + bad*-1) / total;
+  const positive = good / total;
+
   return (
     <>
       <h2>give your feedback!</h2>
@@ -32,6 +38,8 @@ const App = () => {
         <Statistic text={"good"} value={good} />
         <Statistic text={"neutral"} value={neutral} />
         <Statistic text={"bad"} value={bad} />
+        <Statistic text={"average"} value={average} />
+        <Statistic text={"positive"} value={positive} />
     </>
   );
 };
