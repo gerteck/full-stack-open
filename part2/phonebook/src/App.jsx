@@ -1,63 +1,63 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import Persons from './Persons';
+import PersonForm from './PersonForm';
+import Filter from './Filter';
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas',
-      number: '9889 8998'
-     }
-  ]) 
-  const [newName, setNewName] = useState('');
-  const [newNumber, setNewNumber] = useState('');
+    { name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
+  ]);
+  const [nameFilter, setNameFilter] = useState('');
+  const [newPerson, setNewPerson] = useState({
+    name: '',
+    number: ''
+  });
 
   const addPerson = (event) => {
     event.preventDefault();
-    if (newName === '' || newNumber === '') {
+    if (newPerson.name === '' || newPerson.number === '') {
       alert(`Input fields cannot be empty`);
       return;
     }
 
     // newNumber can only have digits and dashes
-    if (!newNumber.match(/^[0-9-]+$/)) {
+    if (!newPerson.number.match(/^[0-9-]+$/)) {
       alert(`Number can only have digits and dashes`);
       return;
     }
 
-    if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+    if (persons.some(person => person.name === newPerson.name)) {
+      alert(`${newPerson.name} is already added to phonebook`);
       return;
     }
 
-    if (persons.some(person => person.number === newNumber)) {
-      alert(`${newNumber} is already added to phonebook`);
+    if (persons.some(person => person.number === newPerson.number)) {
+      alert(`${newPerson.number} is already added to phonebook`);
       return;
     }
 
-    const personObject = {
-      name: newName,
-      number: newNumber
-    };
+    setPersons(persons.concat(newPerson));
+    setNewPerson({
+      name: '',
+      number: ''
+    })
+  };
 
-    setPersons(persons.concat(personObject));
-    setNewName('');
-    setNewNumber('');
+  const onFilterChange = (event) => {
+    setNameFilter(event.target.value.toLowerCase());
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={e => setNewName(e.target.value)}/>
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={e => setNewNumber(e.target.value)}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Filter filterValue={nameFilter} onChange={onFilterChange}/>
+      <h2>Add a new Person</h2>
+      <PersonForm onFormSubmit={addPerson} newPerson={newPerson} setNewPerson={setNewPerson}/>
       <h2>Numbers</h2>
-      {persons.map(person => <div key={person.name}>{person.name} {person.number}</div>)}
+      <Persons persons={persons} nameFilter={nameFilter}/>
     </div>
   )
 }
