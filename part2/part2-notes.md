@@ -117,7 +117,11 @@ In REST terms,
 * Resources are fetched with HTTP GET requests.
 * Resources are created with HTTP POST requests according to REST convention.
   * Data for new resource sent in the body of the request.
- 
+
+* To modify individual resources, we can either 
+  * replace the entire thing with a HTTP PUT request, 
+  * change some propeties with HTTP PATCH request.
+
 
 
 
