@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Weather from './Weather';
 
 const CountryList = ({allCountries, nameFilter}) => {
 
@@ -64,7 +65,12 @@ const CountryList = ({allCountries, nameFilter}) => {
 
     if (listSize === 1) {
         const country = filteredCountries[0];
-        return (displayCountryData(country));
+        return (
+            <>
+                {displayCountryData(country)}
+                <Weather country={country}/>
+            </>
+        );
     }
 
     // No countries found

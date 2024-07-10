@@ -15,7 +15,10 @@ General Idea:
 **Ex 2.20**
 * Add weather report for the capital of country, when only one country shown.
 
-
+Open Weather API Key in `.env.local` in project root:
+```
+VITE_OPEN_WEATHER_API_KEY=<INSERTKEYHERE>
+```
 
 
 # React + Vite
