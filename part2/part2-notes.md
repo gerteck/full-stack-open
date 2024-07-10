@@ -119,12 +119,18 @@ In REST terms,
   * Data for new resource sent in the body of the request.
 
 * To modify individual resources, we can either 
-  * replace the entire thing with a HTTP PUT request, 
-  * change some propeties with HTTP PATCH request.
+  * replace the entire thing with an HTTP PUT request, 
+  * change some properties with HTTP PATCH request.
 
 
+### Adding styles to React app
 
-
+It's time to add some styles to our React app.
+* Let's add CSS the old way without using a CSS preprocessor first.
+* Recap: CSS rules selectors and declarations.
+* Using element types for CSS rules might be problematic, we can use class selectors. 
+  * In React, we have to use `className` attribute.
+* We can use inline styles as well, pass through JS object.
 
 ### Rough time breakdown
 

@@ -3,6 +3,7 @@ import Persons from './Persons';
 import PersonForm from './PersonForm';
 import Filter from './Filter';
 import personService from './services/persons';
+import Notification from './Notification';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,6 +12,9 @@ const App = () => {
     name: '',
     number: ''
   });
+
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     personService.getAll().then(allPersons => setPersons(allPersons));
@@ -51,6 +55,12 @@ const App = () => {
           name: '',
           number: ''
         });
+        setSuccessMessage(
+          `Note '${newPerson.name}' has been added!`
+        );
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000);
       });
   };
 
@@ -68,10 +78,18 @@ const App = () => {
     personService.update(id, newPerson)
     .then(person => {
       setPersons(persons.map(p => p.id !== id ? p : person));
-    });
-    setNewPerson({
-      name: '',
-      number: ''
+      setNewPerson({
+        name: '',
+        number: ''
+      });
+    }).catch(error => {
+      console.log(error);
+      setErrorMessage(
+        `Information of '${newPerson.name}' has already been removed from server`
+      );
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000);
     });
   };
 
@@ -82,6 +100,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage}/>
+      <Notification message={errorMessage} isError={true}/>
       <Filter filterValue={nameFilter} onChange={onFilterChange}/>
       <h2>Add a new Person</h2>
       <PersonForm onFormSubmit={addPerson} newPerson={newPerson} setNewPerson={setNewPerson}/>
