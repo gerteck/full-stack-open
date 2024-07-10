@@ -25,7 +25,7 @@ const update = (id, newObject) => {
         });
 }
 
-const deleteObj = (id) => {
+const remove = (id) => {
     return axios.delete(`${baseUrl}/${id}`)
         .then(response => response.data)
         .catch(error => {
@@ -41,4 +41,4 @@ const deleteObj = (id) => {
 // }
 // cleaner:
 
-export default { getAll, create, update, deleteObj }; 
+export default { getAll, create, update, remove }; 

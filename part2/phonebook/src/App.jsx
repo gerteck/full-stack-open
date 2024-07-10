@@ -31,7 +31,11 @@ const App = () => {
     }
 
     if (persons.some(person => person.name === newPerson.name)) {
-      alert(`${newPerson.name} is already added to phonebook`);
+      const confirmMessage = `${newPerson.name} is already added to phonebook, replace the old number with a new one?`;
+      if (window.confirm(confirmMessage)) {
+        const existingPerson = persons.find(person => person.name === newPerson.name);
+        updatePerson(existingPerson.id, newPerson);
+      }
       return;
     }
 
@@ -50,6 +54,27 @@ const App = () => {
       });
   };
 
+  const deletePerson = (id) => {
+    const person = persons.find(person => person.id === id);
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService.remove(id)
+      .then(() => {
+        setPersons(persons.filter(person => person.id !== id));
+      });
+    }
+  };
+
+  const updatePerson = (id, newPerson) => {
+    personService.update(id, newPerson)
+    .then(person => {
+      setPersons(persons.map(p => p.id !== id ? p : person));
+    });
+    setNewPerson({
+      name: '',
+      number: ''
+    });
+  };
+
   const onFilterChange = (event) => {
     setNameFilter(event.target.value.toLowerCase());
   };
@@ -61,7 +86,7 @@ const App = () => {
       <h2>Add a new Person</h2>
       <PersonForm onFormSubmit={addPerson} newPerson={newPerson} setNewPerson={setNewPerson}/>
       <h2>Numbers</h2>
-      <Persons persons={persons} nameFilter={nameFilter}/>
+      <Persons persons={persons} nameFilter={nameFilter} deletePerson={deletePerson}/>
     </div>
   )
 }
