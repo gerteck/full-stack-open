@@ -134,8 +134,9 @@ It's time to add some styles to our React app.
 
 ### Rough time breakdown
 
-A. roughly 2 hrs
+A. roughly 2 hr
 B. roughly 1 hr
-C. roughly 1/2 hr.
+C. roughly 0.5 hr
 D. roughly 1 hr
-E. 2hrs + 
+E. 2 hr + 2.5 hr = 4.5 hr.
+Total: 9 hr
