@@ -21,7 +21,7 @@ This can be considered "frontend", or browser side application logic.
 
 * ***Anti-pattern***: Using Array Indexes as keys. This is not good.
     * Each item should have permanent and unique property, if not unique, can cause problems.
-```JSX
+```jsx
 <ul>
   {notes.map((note, i) => 
     <li key={i}>
@@ -60,10 +60,57 @@ Here, we can use an HTML form to add new notes.
 * Use `filter` to filter nodes, conditional operators etc.
 
 
+### Getting data from server
+
+Above relates to "frontend" clientside browser functionality. We will also focus on backend, server-side functionality. 
+* First familiarize with how code in browser communicates with the backend.
+
+We can make use of JSON Server to act as our server. 
+  * Handy tool to enable use of server-side functionality without need to program it.
+```
+json-server --port 3001 --watch db.json
+```
+* http://localhost:3001/notes to access the json file > notes.
+* We want to save the notes to the server. 
+  * React code fetches the notes from the server and renders them to the screen. 
+  * When new note added, React code sends it to server to make the new note persist.
+
+
+**Fetching Data from Servers**
+* XMLHttpRequest (XHR) objects can be used to fetch data using Js.
+* Not recommended (event driven model)
+* Use fetch method based on promises instead. 
+  * JavaScript uses async model, esp in context of IO operations. Hence, write non-blocking code to facilitate this.
+* We will use the **axios** library for communicating between browser and server
+  * Functions like `fetch` but nicer to use.
+  * Axios is a popular JavaScript library used for making HTTP requests from a web browser or Node.js.
+
+**Promise**
+* A Promise is an object representing the eventual completion or failure of an asynchronous operation.
+* pending / fulfilled / rejected.
+```jsx
+const promise = axios.get('http://localhost:3001/notes')
+
+promise.then(response => {
+  console.log(response)
+})
+```
+
+**Effect Hooks**
+Effects let a component connect to and synchronize with external systems. This includes dealing with network, browser DOM, animations, widgets written using a different UI library, and other non-React code.
+* `useEffect`. Effect hooks are a good tool to use when fetching data from a server.
+* `useEffect` takes two parameters. The first is a function, the effect itself.
+*  The second parameter of `useEffect` is used to specify how often the effect is run. If the second parameter is an empty array [], then the effect is only run along with the first render of the component.
 
 
 
 
+
+
+### Rough time breakdown
 
 A. roughly 2 hrs
-B. 
+B. roughly 1 hr
+C. roughly 1 hr.
+D.
+E.
