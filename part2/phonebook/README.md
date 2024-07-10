@@ -1,5 +1,15 @@
 # Simple Phonebook
 
+Phonebook React App allows filtering of contacts, and adding new persons, updating of numbers, deletion of contacts.
+
+Note that this application uses `json-server` to simulate a server.
+
+**IMPORTANT**: 
+* to run development environment, run both in separate cli windows:
+```bash
+npm run dev
+npm run server
+```
 
 ## React + Vite
 
