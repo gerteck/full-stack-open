@@ -22,6 +22,7 @@ rce: React Class Component
 * Run on port 3001, `--watch` option looks for saved changes to db.json.
 ```
 npm install json-server --save-dev
+
 json-server --port 3001 --watch db.json
 ```
 
@@ -38,3 +39,10 @@ Add into `package.json` for `scripts`
   },
 }
 ```
+
+**Dependencies**
+* E.g. installing `axios`:
+```
+npm install axios
+```
+* run cli command in root directory of project

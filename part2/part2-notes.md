@@ -138,4 +138,4 @@ A. roughly 2 hrs
 B. roughly 1 hr
 C. roughly 1/2 hr.
 D. roughly 1 hr
-E.
+E. 2hrs + 
