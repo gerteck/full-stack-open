@@ -44,11 +44,15 @@ const App = () => {
       return;
     }
 
-    setPersons(persons.concat(newPerson));
-    setNewPerson({
-      name: '',
-      number: ''
-    })
+    axios.post(serverEndpoint, newPerson)
+      .then(response => {
+        console.log(response);
+        setPersons(persons.concat(response.data));
+        setNewPerson({
+          name: '',
+          number: ''
+        });
+      });
   };
 
   const onFilterChange = (event) => {

@@ -103,6 +103,21 @@ Effects let a component connect to and synchronize with external systems. This i
 *  The second parameter of `useEffect` is used to specify how often the effect is run. If the second parameter is an empty array [], then the effect is only run along with the first render of the component.
 
 
+### Altering data in server
+
+The `json-server` package claims to be RESTful API in its documentation.
+* However, it does not exactly match the description provided by the textbook definition, of REST API, neither do most.
+* Impt to familiarize with conventions used by REST APIs in general.
+* Look at conventional use of routes, (URLs HTTP request types) in REST.
+
+**REST**
+In REST terms, 
+* individual data objects: resources
+* Each resource has unique address associated with it (URL)
+* Resources are fetched with HTTP GET requests.
+* Resources are created with HTTP POST requests according to REST convention.
+  * Data for new resource sent in the body of the request.
+ 
 
 
 
@@ -111,6 +126,6 @@ Effects let a component connect to and synchronize with external systems. This i
 
 A. roughly 2 hrs
 B. roughly 1 hr
-C. roughly 1 hr.
+C. roughly 1/2 hr.
 D.
 E.
