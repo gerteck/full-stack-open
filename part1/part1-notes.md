@@ -192,3 +192,10 @@ cd <name>
 npm install
 npm run dev
 ```
+
+### Rough time breakdown
+
+(with breaks in betwwen)
+
+Part0: 3 hrs
+Part1: 6 hrs

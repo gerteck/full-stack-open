@@ -1,13 +1,19 @@
 ## Shortcuts for Productivity
 
-**Create New React Application**:
+**Create New Application**:
 
+New Vite React App: 
 ```bash
 # npm 7+, extra double-dash is needed:
 npm create vite@latest <name> -- --template react
 cd <name>
 npm install
 npm run dev
+```
+
+New npm package:
+```bash
+npm init
 ```
 
 **User code Snippets**
