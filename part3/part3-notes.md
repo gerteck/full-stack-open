@@ -356,13 +356,42 @@ app.use(errorHandler)
 
 ### Validation and ESLint
 
+Gotta do data validation, on data that is stored in the database. 
+* E.g. The application should not accept notes that have missing or empty content property.
+* One smarter way to do this is to use the validation functionality in Mongoose
+E.g.
+```js
+const noteSchema = new mongoose.Schema({
 
+  content: {
+    type: String,
+    minLength: 5,
+    required: true
+  },
+  important: Boolean
+})
+```
+* Requird fields, min-length, etc. We can define custom validators as well.
+* When object breaks constraints, operation throws an exception. Ensure handler passes potential exceptions to the error handler middleware.
+  * Also extend error handler to deal with validation errors.
   
+**Deploying to Production**:
 
+Make sure to set the database URL in service hosting the app. Also whitelist the IP address in MongoDB Atlas as well.
 
+**Linting**:
 
+Lint is: (Static Analysis)
+> Generically, lint or a linter is any tool that detects and flags errors in programming languages, including stylistic errors. The term lint-like behavior is sometimes applied to the process of flagging suspicious language usage. Lint-like tools generally perform static analysis of source code.
 
+In JavaScript, current leading tool for static analysis is ESLint.
 
+Install with `npm install eslint @eslint/js --save-dev` and `npx eslint --init`
+* Save in `eslint.config.mjs` file, reformat accordingly.
+* Plugin to define code style rules: `npm install --save-dev @stylistic/eslint-plugin-js`
+* Individual lint files with `npx eslint index.js`, or just run script `"lint": "eslint ."`, `npm run lint`.
+* Ignore directories.
+* Use eslint-plugin to run linter continuously.
 
 
 ### Rough time breakdown
@@ -372,4 +401,4 @@ app.use(errorHandler)
 A. roughly 2 + 2 = 4 hrs
 B. roughly 2 + 2 = 4 hrs
 C. roughly 1 + 2 = 3 hrs
-D. roughly
+D. roughly 1 + 1 = 2 hrs

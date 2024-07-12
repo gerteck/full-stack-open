@@ -52,3 +52,10 @@ Add into `package.json` for `scripts`
 npm install axios
 ```
 * run cli command in root directory of project
+
+**Dev Dependencies**
+* E.g. ESLint:
+```
+npm install eslint @eslint/js --save-dev
+npx eslint --init
+```
