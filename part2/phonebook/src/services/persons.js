@@ -4,18 +4,12 @@ const baseUrl = '/api/persons';
 
 const getAll = () => {
     return axios.get(baseUrl)
-        .then(response => response.data)
-        .catch(error => {
-            console.log(error)
-        });
+        .then(response => response.data);
 }
 
 const create = newObject => {
     return axios.post(baseUrl, newObject)
-        .then(response => response.data)
-        .catch(error => {
-            console.log(error)
-        });
+        .then(response => response.data);
 }
 
 const update = (id, newObject) => {
@@ -25,10 +19,7 @@ const update = (id, newObject) => {
 
 const remove = (id) => {
     return axios.delete(`${baseUrl}/${id}`)
-        .then(response => response.data)
-        .catch(error => {
-            console.log(error)
-        });
+        .then(response => response.data);
 }
 
 

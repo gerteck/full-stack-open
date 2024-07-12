@@ -50,6 +50,7 @@ const App = () => {
 
     personService.create(newPerson)
     .then(person => {
+      console.log("Success");
         setPersons(persons.concat(person));
         setNewPerson({
           name: '',
@@ -61,6 +62,15 @@ const App = () => {
         setTimeout(() => {
           setSuccessMessage(null)
         }, 5000);
+      }).catch(error => {
+          console.log(error);
+          console.log(error.response.data);
+          setErrorMessage(
+            error.response.data.error
+          );
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000);
       });
   };
 
@@ -84,8 +94,9 @@ const App = () => {
       });
     }).catch(error => {
       console.log(error);
+      console.log(error.response.data);
       setErrorMessage(
-        `Information of '${newPerson.name}' has already been removed from server`
+        ` ${error.response.data.error}, or information of '${newPerson.name}' has already been removed from server`
       );
       setTimeout(() => {
         setErrorMessage(null)
