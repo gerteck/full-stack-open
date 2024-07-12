@@ -3,7 +3,7 @@
 We look at the backend, implementing functionality on the server side of the stack. We will implement a simple REST API in Node.js by using the Express library, and store the application data in a MOngoDB database. At the end, we will deploy the application on the internet.
 
 
-### Node.js and Express (and nodemon, Postman, )
+### Node.js and Express (and nodemon, Postman, Middleware)
 
 Here, we will use Node v20 or later. Do `nvm use 20`.
 
@@ -262,14 +262,106 @@ export default defineConfig({
 
 
 
-### Saving Data to MongoDB
+### Saving Data to MongoDB (MongoDB Atlas)
 
-Before, the application saves the data to a variable, if the application crashes or is restarted, the data will disappear. It needs a database.
+Before, the application saves the data to a variable, if the application crashes or is restarted, the data will disappear. It needs a database. But first, let's look at debugging.
 
+**Debugging Node applications**
+Debugging node applications is different from JS running in browser using `console.log`.
+* Using the debugger can allow our console to be in the current scope for JS running in browser!! [see link](https://swizec.com/blog/javascript-debugging-slightly-beyond-consolelog/)
+* **Visual Studio Code debugger**, configure your `launch.json` file to start debugging.
+  * We can see the code execution, and pause at breakpoint.
+* **Chrome dev tools**: Chrome developer console also allows debugging: `node --inspect index.js` or `nodemon --inspect index.js`.
+  * Access debugger on green icon, node logo.
+  * Sources tab can be used to set breakpoints.
 
+Debugging full stack application may be tricky, but first figure out where the problem occurs. 
+* Be systematic, question everything, eliminate possibilities one by one. 
+* Log to console, use Postman, debuggers, gain experience.
+* Don't continue to write code. Jidoka (stop and fix).
 
+**MongoDB**:
+To save the notes indefinitely, we need a database. Most are relational (CS2102 shee), but we will expose to MongoDB, which is a document database.
+* Document-orientated database (NoSQL) database. ([MongoDB](https://www.mongodb.com/resources/basics/databases/document-databases), [Cloud Firestore](https://firebase.google.com/docs/firestore/data-model) etc.)
+* Stores information in documents, instead of fixed rows and columns (fields in relation), it has flexible documents.
+
+Let's use MongoDB provider, MongoDB Atlas.
+
+**Schema,  Creating, Saving, Fetching Objects**
+* We define the schema of a note stored in the `noteSchema`. Tells how note objects are to be storedin the database.
+
+```js
+const noteSchema = new mongoose.Schema({
+  content: String,
+  important: Boolean,
+})
+
+const Note = mongoose.model('Note', noteSchema)
+```
+* Note paramete is singular name of model.
+* Idea behind Mongoose is that the data stored in the database is given a schema at the level of the application that defines the shape of the documents stored in any given collection.
+  * It is possible to store documents with completely different fields in the same collection.
+* Create new note object with help of Note model.
+  * Models are constructor functions that create new JavaScript objects based on the provided parameters. Since the objects are created with the model's constructor function, they have all the properties of the model, which include methods for saving the object to the database.
+* Save using `save` method.
+
+To fetch objects example:
+```js
+// as parameter is empty object, all notes returned,
+Note.find({}).then(result => {
+  result.forEach(note => {
+    console.log(note)
+  })
+  mongoose.connection.close()
+})
+
+// Restrict search: find({important: true})
+```
+* Mongo search query [syntax](https://www.mongodb.com/docs/manual/reference/operator/)
+
+**Connecting backend to DB, moving DB into own module (`/models`), using DB in route handlers**
+
+* Browser <-> Server <-> Database.
+* Instead of saving data to variables, make appropriate calls to Database to save the data.
+* Also, move the Mongoose-specific code into its own module for abstraction. `/models/person.js`
+  * Defining Node modules differ slightly from defining ES6 Modules.
+  * Use dotenv library to hide the URL.
+
+* After that, in the route handlers (endpoint resolvers), change the functionality to use the database!
+
+**Error Handling, Error Handle Middleware, Order of middleware, Other ops**
+
+* E.g. if visit URL of note where id does not exist, server should respond with HTTP status code not found 404.
+* Most modern services where you deploy has some logging system to check logs. Good to output errors.
+
+We can move error handling into middleware, which may be useful if we want to report data related to errors to external error-tracker like Sentry.
+* E.g. Express Error handlers. 
+* They should be the last loaded middleware, and all routes should be registered before it.
+```js
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+
+// this has to be the last loaded middleware (error Handling), also all the routes should be registered before this!
+app.use(errorHandler)
+```
+* E.g. unknown endpoint should be called at the end.
+* Other operations include deleting and updating individual objects.
 
 ### Validation and ESLint
+
+
+  
+
+
+
+
 
 
 
@@ -279,5 +371,5 @@ Before, the application saves the data to a variable, if the application crashes
 
 A. roughly 2 + 2 = 4 hrs
 B. roughly 2 + 2 = 4 hrs
-C. roughly 
+C. roughly 1 + 2 = 3 hrs
 D. roughly
