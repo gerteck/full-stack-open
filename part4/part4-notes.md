@@ -50,6 +50,31 @@ error('error message')
 
 
 
+**Testing Node Applications**
+
+One essential area of software development is automated testing. 
+
+We can start with unit tests. As the logic of our current application (FSO-part4) is quite simple, not much to test. We will create some simple functions for test writing practice.
+
+There are a large number of test libraries or "test runners" for JavaScript. The previous meta was [Mocha](https://mochajs.org/) (running on Nodejs), but replaced by [Jest](https://jestjs.io/) which supports TS, Node, React, Angular Vue etc. Recently, upcoming testing framework is [Vitest](https://vitest.dev/). Node also has an in built library node:test, which is well suited for this course.
+
+npm script test: `"test": "node --test"`
+
+* Create a separate directory for tests, and create a `xxx.test.js` file with tests.
+* Individual test cases defined with a `test` function.
+* We can verify results of a test with method `strictEqual` of the `assert` library.
+* We also can define a `describe` block around tests to group tests into logical collections.
+  * It may also be necessary to run some shared setup or teardown operations for a group of tests.
+
+
+
+### Testing the Backend
+
+
+
+
+
+
 
 
 
@@ -64,7 +89,7 @@ error('error message')
 
 (with breaks in between)
 
-A. roughly 
+A. roughly 1 + 2 hrs
 B. roughly 
 C. roughly 
 D. roughly 
