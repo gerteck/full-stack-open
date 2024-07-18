@@ -49,7 +49,6 @@ error('error message')
 * `Find all references` feature in VS Code enables one to see where the modules have been exported.
 
 
-
 **Testing Node Applications**
 
 One essential area of software development is automated testing. 
@@ -70,13 +69,128 @@ npm script test: `"test": "node --test"`
 
 ### Testing the Backend
 
+Let's write tests for the backend. Since there is no complicated logic, no point writing unit tests (that test isolated component code).
+
+It can be beneficial to implement tests by *mocking the database* instead of using real database.
+    * We can use library `mongodb-memory-server` to do this
+    * As the backend is simple, we can test the whole thing through REST API, so database is included.
+    Can be considered integration testing.
+
+**Test Environment**
+
+Server running in Render is called in production mode.
+
+The convention in Node is to define execution mode of application with the `NODE_ENV` env variable. 
+    * It is common practice to define separate modes for development and testing.
+
+We can define it in our scripts.
+
+```
+npm install --save-dev cross-env
+
+{
+  // ...
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "cross-env NODE_ENV=test node --test",
+    "build:ui": "rm -rf build && cd ../frontend/ && npm run build && cp -r build ../backend",
+    "deploy": "fly deploy",
+    "deploy:full": "npm run build:ui && npm run deploy",
+    "logs:prod": "fly logs",
+    "lint": "eslint .",
+  },
+  // ...
+}
+```
+
+With this, we can modify the way our application runs in different modes. We can create a separate database in MongoDB Atlas, but it is not optimal. Test execution typically requires single database instance not used by tests running concurrently.
+
+Better to run tests on local installed and running database on local machine. Optimally, use a separate database for each test execution. We can achieve this by
+* Running Mongo in-memory
+* Using Docker containers
+
+However, we will not complicate things and just use the MongoDB Atlas database for now.
+
+* Config the `MONGODB_URL` to set dynamically based on the node env, for dev and test databases.
+
+**Supertest**
+
+We will use the `supertest` package to help write tests for testing the API.
+* `npm install --save-dev supertest`
+
+Consider:
+```js
+const { test, after } = require('node:test')
+const mongoose = require('mongoose')
+const supertest = require('supertest')
+const app = require('../app')
+
+const api = supertest(app)
+
+test('notes are returned as json', async () => {
+  await api
+    .get('/api/notes')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+})
+
+after(async () => {
+  await mongoose.connection.close()
+})
+```
+
+* We import the Express application, wrap it with the supertest function, into a superagent object. This object then assigned to `api` variable and tests can use for making HTTP requests to backend.
+* We also define the value in regex (Regular Expression), it is acceptable that the header contains the string in question.
+* We also have `async` and `await` keyword. 
+    * No need to use callback functions. Allows us to use async functions in a way to make the code look synchronous. Prevent 'callback hell'.
+* Once all the tests finish running, we close the database connection used by Mongoose.
+* Supertest also takes care that the app being tested is tarted at the port that it uses internally. 
 
 
+**Initializing Database before Tests**
+
+Tests are not optimal as they are dependent on the state of the database. We should reset the database and generate the needed test data in a controlled manner before running the tests.
+* We can use the `beforeEach` function to initialize the database before every test.
+* Ensure the database is in the same state before every test is run.
+
+We can also optimize the function that sets up the test by using `Promise.all()`, `forEach()` etc.
 
 
+**Testing one by one**
+`npm test` executes all tests, but we may want to test one or two tests only. We can do this by making use of the `only` (`test.only()`) method.
+* Then, run the tests with the `--test-only` argument.
+
+Alternatively, we can specify the exact tests to be run as arguments.
+* E.g. `npm test -- tests/note_api.test.js`, `npm run test -- --test-name-pattern="notes"`
+
+**Refactoring the Backend**
+
+We can change the backend to use async and await, on top of using it in testing.
+
+When we refactor, there is always the risk of regression, where existing functionality may break. We should write tests for each route of the API first.
+
+In doing so, we can also write test helper functions, for verification steps that will repeat.
+
+After writing our tests, we can then start doing our refactoring.
 
 
+**Error Handling and Async/Await**
 
+We have not handled error situations. When we end up with an unhandled promise rejection, the request never receives a response.
+* We can use the old familiar `try/catch` mechanism, and call the next() function to pass the request handling to middleware.
+* `strictEqual` uses method `Object.is` to compare similarity. `deepStrictEqual` checks that value of fields are the same.
+* Eliminating `try/catch`: When we use `async/await`, the price is using the `try/catch` structure. However, we can use the `express-async-errors` library to eliminate the catch from the methods.
+    * `npm install express-async-errors`
+    * The library handles everything under the hood, automatically passing to error handling middleware.
+
+
+**Refactoring Tests**
+
+Some requests are not tested, e.g. when request is sent with an invalid id. Grouping and organization of tests could also use some improvement, as all exist on the 'top level'. Use `describe` blocks to group related tests.
+
+
+Ultimately, no best way of conducting API-level integration tests for server applications.
 
 
 
