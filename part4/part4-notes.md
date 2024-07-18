@@ -192,7 +192,7 @@ Some requests are not tested, e.g. when request is sent with an invalid id. Grou
 
 Ultimately, no best way of conducting API-level integration tests for server applications.
 
-
+### User Administration
 
 
 
@@ -204,6 +204,6 @@ Ultimately, no best way of conducting API-level integration tests for server app
 (with breaks in between)
 
 A. roughly 1 + 2 hrs
-B. roughly 
+B. roughly 2 + 4 hrs
 C. roughly 
 D. roughly 
