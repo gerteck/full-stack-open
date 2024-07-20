@@ -194,16 +194,154 @@ Ultimately, no best way of conducting API-level integration tests for server app
 
 ### User Administration
 
+Adding user authentication and authorization to the application.
+* Users should be stored in the database
+* Every note linked to user who created it
+* Only creator can delete or edit a note.
+* One to Many relationship btwn user and note.
+
+For relational database, implementation straightforwad, two separate tables, id of user is foreign key. 
+
+For document database, situation different, many ways to model situation.
+
+As existing solution stores every note in notes collection, to not change existing collection:
+* Save users in their own collection.
+* Use object IDs in Mongo to reference documents in other collections.
+
+Trad. document databases like Mongo do not support `join` queries as in relational, but it supports lookup aggregation queries. However, we will not use here.
+
+We will implement in our code if need functionality similar to join queries by making multiple queries. Mongoose can also abstract out the details sometimes.
+
+**References across collections**
+
+We can do similar to relational database, have a reference key. 
+
+Document databases flexible, we can store both primary keys in each other.
+```json
+[
+  [
+  {
+    content: 'HTML is easy',
+    important: false,
+    _id: 221212,
+    user: 123456,
+  },
+  {
+    content: 'The most important operations of HTTP protocol are GET and POST',
+    important: true,
+    _id: 221255,
+    user: 123456,
+  },
+  {
+    content: 'A proper dinosaur codes with Java',
+    important: false,
+    _id: 221244,
+    user: 141414,
+  },
+],
+---
+[
+  {
+    username: 'mluukkai',
+    _id: 123456,
+    notes: [221212, 221255],
+  },
+  {
+    username: 'hellas',
+    _id: 141414,
+    notes: [221244],
+  },
+]
+```
+
+Document databases also offer a diff way of organizing data, it may be beneficial to nest the entire notes array as part of the documents in user collection.
+* In such schema, notes tightly nested under users, database would not generate ids for them.
+* Chosen schema must support use case of application best.
+* Schema-less databases require dev to make more radical design decisions abt data organization at the beginning of the project.
+
+**Mongoose Schema for Users**
+
+Attempt the approach of storing ids of notes created by user in the user document.
+* Ids of notes stored in user document as array of Mongo IDs.
+* We will also expand the schema of the note so that it contains the info about the user who created it.
+* Compared to relational database, references now stored in both documents.
+
+**Creating Users, New Notes**
+As users have unique username and a password. We need a password hash.
+* Use `bcrypt` package for generating password hash.
+* Password sent in request not stored, rather hash is stored.
+
+Creating new users: Use HTTP POST to users path.
+* Define separate router for dealing with users.
+* After defining business logic, we can do testing.
+* We can use a uniqueness index to enforce unique.
+* Other functionalities include permitted characters and strength of password if desired.
 
 
+Note schema needs to be updated.
+* Add user field in note
+* Concatenate id of note in notes field of the user object
 
+Test Driven Development: Tests for new functionality written before functionality is implemented.
+
+**Populate (Join)**
+Want our API to work such that the user objects would contain contents of user's note. In relational, we could use a join query, but document databases can't do this.
+
+In Mongoose library, we can accomplish this join by doing multiple queries.
+* Mongoose join is done with `populate` method.
+* We can use the populate method to choose fields we want to include
+* Note that the database does not know that the id stored in user field of notes reference the documents in the users collection.
+  * It is based on the fact that we have defined "types" to references in Mongoose schema with the `ref` option.
+
+```
+const noteSchema = new mongoose.Schema({
+  content: {
+    type: String,
+    required: true,
+    minlength: 5
+  },
+  important: Boolean,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
+})
+```
+
+### Token Authentication
+
+Tokens are stateless, general gist:
+
+1. User Requests Access with Username / Password.
+2. Application validates credentials.
+3. Application provides a signed token to the client.
+4. Client stores that token and sends it along with every request.
+5. Server verifies token and responds with data.
+
+![](/images/4-token.png)
+
+We will add the login form to frontend in part 5. 
+
+We will use the `jsonwebtoken` library to generate JSON web tokens.
+* `npm install jsonwebtoken`
+
+After crafting the logic, we should also limit creating new notes to logged-in users.
+* Creating new notes possible if post request has valid token attached.
+* Use authorization header, which also tells auth scheme used. Use the bearer scheme here.
+
+Some problems of token based auth is validity
+* Limit validity period of token
+* Save info about token, check for each API request if access right to token is still valid. 
+
+Others: Because of the changes, most test have been broken. Fixing tests will be required.
+* Usernames, passwords, token auth should always be used over HTTPS.
 
 
 ### Rough time breakdown
 
-(with breaks in between)
+(with extensive breaks in between, due to intern workload)
 
 A. roughly 1 + 2 hrs
-B. roughly 2 + 4 hrs
-C. roughly 
-D. roughly 
+B. roughly 2 hrs
+C. roughly 2 hrs 
+D. roughly 1 + 3 hrs
