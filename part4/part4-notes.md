@@ -217,9 +217,8 @@ We will implement in our code if need functionality similar to join queries by m
 We can do similar to relational database, have a reference key. 
 
 Document databases flexible, we can store both primary keys in each other.
-```json
+```js
 [
-  [
   {
     content: 'HTML is easy',
     important: false,
@@ -239,7 +238,6 @@ Document databases flexible, we can store both primary keys in each other.
     user: 141414,
   },
 ],
----
 [
   {
     username: 'mluukkai',
