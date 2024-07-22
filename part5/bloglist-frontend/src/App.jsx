@@ -1,88 +1,60 @@
 import { useState, useEffect } from 'react';
-import Blog from './components/Blog';
-import Notification from './components/Notification';
 
 import blogService from './services/blogs';
-import loginService from './services/login';
+
+import Blog from './components/Blog';
+import BlogCreate from './components/BlogCreate';
+import Login from './components/Login';
+import Notification from './components/Notification';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-
   const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedUser');
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      blogService.setToken(user.token);
+    }
+  }, []);
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs( blogs ));  
-  }, []);
+  }, [successMessage]);
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    
-    try {
-      const user = await loginService.login({
-        username, password,
-      })
-      setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
-  };
-
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-          <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-          <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  );
+  const handleLogout = () => {
+    window.localStorage.removeItem('loggedUser');
+    setUser(null);
+    blogService.setToken(null);
+  }
 
   const userDetails = () => (
     <div>
-      <p>{user.name} logged-in!</p>
-      <button onClick={() => setUser(null)}>logout</button>
+      <p>{user.name} logged in! <button onClick={handleLogout}>logout</button></p>
     </div>
   );
 
   if (user === null) {
     return (
-      <div>
-        <h2>blogs</h2>
-        <Notification message={errorMessage} isError />
-        {loginForm()}
-      </div>
+      <Login setUser={setUser}/>
     );
   }
 
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={errorMessage} isError />
-
+      <Notification message={successMessage} />
+      <Notification message={errorMessage} isError/>
       {userDetails()}
 
+      <h2>create new</h2>
+      <BlogCreate setErrorMessage={setErrorMessage} setSuccessMessage={setSuccessMessage}/>
+
+      <h2>blogs wall</h2>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}

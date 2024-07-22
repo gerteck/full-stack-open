@@ -1,0 +1,43 @@
+.blog-container {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .blog-container:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .blog-title {
+    font-size: 1.5em;
+    margin: 0;
+    color: #333;
+  }
+  
+  .blog-author {
+    font-size: 1em;
+    color: #666;
+    margin: 5px 0;
+  }
+  
+  .blog-url {
+    display: inline-block;
+    margin: 10px 0;
+    font-size: 0.9em;
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .blog-url:hover {
+    text-decoration: underline;
+  }
+  
+  .blog-likes {
+    font-size: 0.9em;
+    color: #888;
+    margin-top: 10px;
+  }
+  
