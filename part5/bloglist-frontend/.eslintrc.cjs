@@ -12,10 +12,21 @@ module.exports = {
   settings: { react: { version: '18.2' } },
   plugins: ['react-refresh'],
   rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
+    "indent": ["error", 2],
+    "linebreak-style": ["error", (process.platform === "win32" ? "windows" : "unix")],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "eqeqeq": "error",
+    "no-trailing-spaces": "error",
+    "object-curly-spacing": [
+      "error", "always"
     ],
-    'react/prop-types': 0,
+    "arrow-spacing": [
+      "error", { "before": true, "after": true }
+    ],
+    "no-console": 0,
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": 0,
+    "no-unused-vars": 0
   },
 }

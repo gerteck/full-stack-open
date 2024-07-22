@@ -1,18 +1,18 @@
 import { useState } from 'react';
-import './css/blog.css'; // Make sure to create this CSS file for styles
+import './css/blog.css';
 import blogService from '../services/blogs';
 
 const Blog = ({ blog, setBlogs, currentUser }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const isAuthor = currentUser.username === blog.user.username;
-  
+
   const handleLike = async () => {
     const updatedBlog = {
       ...blog,
-      likes: blog.likes + 1,
+      likes: blog.likes + 1
     };
-    blogService.update(blog.id, updatedBlog);  
+    blogService.update(blog.id, updatedBlog);
 
     setBlogs((prevBlogs) => {
       return prevBlogs.map((prevBlog) => {
@@ -33,7 +33,13 @@ const Blog = ({ blog, setBlogs, currentUser }) => {
   const blogDetails = () => (
     <div>
       <p className="blog-author">by {blog.author}</p>
-      Read at <a className="blog-url" href={blog.url} target="_blank" rel="noopener noreferrer">
+      Read at{' '}
+      <a
+        className="blog-url"
+        href={blog.url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         {blog.url}
       </a>
       <p className="blog-likes">
@@ -43,19 +49,19 @@ const Blog = ({ blog, setBlogs, currentUser }) => {
       {isAuthor && <button onClick={handleDelete}>delete</button>}
     </div>
   );
-  
+
   return (
-  <div className="blog-container">
+    <div className="blog-container">
+      <h2 className="blog-title">
+        {blog.title} &nbsp;
+        <button onClick={() => setShowDetails(!showDetails)}>
+          {showDetails ? 'hide' : 'view'}
+        </button>
+      </h2>
 
-    <h2 className="blog-title">{blog.title} &nbsp;
-      <button onClick={() => setShowDetails(!showDetails)}>
-        {showDetails ? 'hide' : 'view'}
-      </button>
-    </h2>
-
-    {showDetails && blogDetails()}
-
-  </div>
-)};
+      {showDetails && blogDetails()}
+    </div>
+  );
+};
 
 export default Blog;
