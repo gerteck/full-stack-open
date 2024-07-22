@@ -3,7 +3,7 @@ import { useState } from 'react';
 import BlogForm from './BlogForm';
 import blogService from '../services/blogs';
 
-const BlogCreate = ({setErrorMessage, setSuccessMessage}) => {
+const BlogCreate = ({setErrorMessage, setSuccessMessage, blogFormRef}) => {
     const [newBlog, setNewBlog] = useState({
         title: '',
         url: '',
@@ -29,6 +29,10 @@ const BlogCreate = ({setErrorMessage, setSuccessMessage}) => {
         setTimeout(() => {
             setSuccessMessage(null)
         }, 5000);
+
+        if(blogFormRef) {
+            blogFormRef.current.toggleVisibility();
+        }
     };
 
     return (

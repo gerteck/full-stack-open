@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import blogService from './services/blogs';
 
@@ -6,12 +6,15 @@ import Blog from './components/Blog';
 import BlogCreate from './components/BlogCreate';
 import Login from './components/Login';
 import Notification from './components/Notification';
+import Togglable from './components/Togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+
+  const blogFormRef = useRef();
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser');
@@ -51,12 +54,14 @@ const App = () => {
       <Notification message={errorMessage} isError/>
       {userDetails()}
 
-      <h2>create new</h2>
-      <BlogCreate setErrorMessage={setErrorMessage} setSuccessMessage={setSuccessMessage}/>
+      <Togglable buttonLabel='create new blog' ref={blogFormRef}>
+        <h2>create new</h2>
+        <BlogCreate setErrorMessage={setErrorMessage} setSuccessMessage={setSuccessMessage} blogFormRef={blogFormRef}/>
+      </Togglable>
 
       <h2>blogs wall</h2>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+      {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+        <Blog currentUser={user} key={blog.id} blog={blog} setBlogs={setBlogs}/>
       )}
     </div>
   )

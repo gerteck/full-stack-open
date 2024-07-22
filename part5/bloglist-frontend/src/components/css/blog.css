@@ -1,7 +1,7 @@
 .blog-container {
     border: 1px solid #ddd;
     border-radius: 5px;
-    padding: 15px;
+    padding: 10px;
     margin: 10px 0;
     background-color: #f9f9f9;
     transition: box-shadow 0.3s ease;
@@ -12,7 +12,7 @@
   }
   
   .blog-title {
-    font-size: 1.5em;
+    font-size: 1.2em;
     margin: 0;
     color: #333;
   }
@@ -25,7 +25,6 @@
   
   .blog-url {
     display: inline-block;
-    margin: 10px 0;
     font-size: 0.9em;
     color: #007bff;
     text-decoration: none;
@@ -37,7 +36,5 @@
   
   .blog-likes {
     font-size: 0.9em;
-    color: #888;
-    margin-top: 10px;
   }
   

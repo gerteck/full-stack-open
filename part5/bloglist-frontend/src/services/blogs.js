@@ -22,6 +22,15 @@ const update = (id, newObject) => {
 }
 
 
+const remove = (id) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  const request = axios.delete(`${baseUrl}/${id}`, config);
+  return request.then(response => response.data);
+}
+
 const getAll = () => {
   const request = axios.get(baseUrl);
   return request.then(response => response.data);
@@ -31,5 +40,6 @@ export default {
   getAll,
   create,
   update,
+  remove,
   setToken
 }
