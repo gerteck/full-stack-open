@@ -1,34 +1,10 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import './css/blog.css';
-import blogService from '../services/blogs';
 
-const Blog = ({ blog, setBlogs, currentUser }) => {
+const Blog = ({ blog, handleLike, handleDelete, currentUser }) => {
   const [showDetails, setShowDetails] = useState(false);
-
   const isAuthor = currentUser.username === blog.user.username;
-
-  const handleLike = async () => {
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1
-    };
-    blogService.update(blog.id, updatedBlog);
-
-    setBlogs((prevBlogs) => {
-      return prevBlogs.map((prevBlog) => {
-        return prevBlog.id === blog.id ? updatedBlog : prevBlog;
-      });
-    });
-  };
-
-  const handleDelete = async () => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      blogService.remove(blog.id);
-      setBlogs((prevBlogs) => {
-        return prevBlogs.filter((prevBlog) => prevBlog.id !== blog.id);
-      });
-    }
-  };
 
   const blogDetails = () => (
     <div>
@@ -44,9 +20,9 @@ const Blog = ({ blog, setBlogs, currentUser }) => {
       </a>
       <p className="blog-likes">
         Likes: {blog.likes} &nbsp;
-        <button onClick={handleLike}>like</button>
+        <button onClick={() => handleLike(blog)}>like</button>
       </p>
-      {isAuthor && <button onClick={handleDelete}>delete</button>}
+      {isAuthor && <button onClick={() => handleDelete(blog)}>delete</button>}
     </div>
   );
 
@@ -62,6 +38,11 @@ const Blog = ({ blog, setBlogs, currentUser }) => {
       {showDetails && blogDetails()}
     </div>
   );
+};
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired
 };
 
 export default Blog;

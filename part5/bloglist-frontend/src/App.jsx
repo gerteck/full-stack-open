@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import blogService from './services/blogs';
 
 import Blog from './components/Blog';
-import BlogCreate from './components/BlogCreate';
+import BlogForm from './components/BlogForm';
 import Login from './components/Login';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
@@ -27,7 +27,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, [successMessage]);
+  }, []);
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedUser');
@@ -47,6 +47,58 @@ const App = () => {
     return <Login setUser={setUser} />;
   }
 
+  const createBlog = async (event, newBlog) => {
+    event.preventDefault();
+
+    if (!newBlog.title || !newBlog.url) {
+      setErrorMessage('New blog must have a title, and URL');
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
+
+    const returnedBlog = await blogService.create(newBlog);
+    const createdBlog = { ...returnedBlog, user: user };
+
+    setSuccessMessage(
+      `New blog "${createdBlog.title}" by ${createdBlog.author} created`
+    );
+    setTimeout(() => {
+      setSuccessMessage(null);
+    }, 5000);
+
+    if (blogFormRef) {
+      blogFormRef.current.toggleVisibility();
+    }
+
+    setBlogs((prevBlogs) => {
+      return prevBlogs.concat(createdBlog);
+    });
+  };
+
+  const handleLike = async (blog) => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1
+    };
+    blogService.update(blog.id, updatedBlog);
+
+    setBlogs((prevBlogs) => {
+      return prevBlogs.map((prevBlog) => {
+        return prevBlog.id === blog.id ? updatedBlog : prevBlog;
+      });
+    });
+  };
+
+  const handleDelete = async (blog) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      blogService.remove(blog.id);
+      setBlogs((prevBlogs) => {
+        return prevBlogs.filter((prevBlog) => prevBlog.id !== blog.id);
+      });
+    }
+  };
+
   return (
     <div>
       <h2>blogs</h2>
@@ -56,11 +108,7 @@ const App = () => {
 
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <h2>create new</h2>
-        <BlogCreate
-          setErrorMessage={setErrorMessage}
-          setSuccessMessage={setSuccessMessage}
-          blogFormRef={blogFormRef}
-        />
+        <BlogForm onFormSubmit={createBlog} />
       </Togglable>
 
       <h2>blogs wall</h2>
@@ -71,6 +119,8 @@ const App = () => {
             currentUser={user}
             key={blog.id}
             blog={blog}
+            handleLike={handleLike}
+            handleDelete={handleDelete}
             setBlogs={setBlogs}
           />
         ))}
