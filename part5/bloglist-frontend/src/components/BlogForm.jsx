@@ -2,14 +2,21 @@ import { useState } from 'react';
 import './css/blogForm.css'; // Ensure you have this CSS file for styles
 
 const BlogForm = ({ onFormSubmit }) => {
-  const [newBlog, setNewBlog] = useState({
+  const emptyBlog = {
     title: '',
     url: ''
-  });
+  };
+  const [newBlog, setNewBlog] = useState(emptyBlog);
 
   return (
     <>
-      <form className="blog-form" onSubmit={(e) => onFormSubmit(e, newBlog)}>
+      <form
+        className="blog-form"
+        onSubmit={(e) => {
+          onFormSubmit(e, newBlog);
+          setNewBlog(emptyBlog);
+        }}
+      >
         <div className="form-group">
           <label>Title:</label>
           <input

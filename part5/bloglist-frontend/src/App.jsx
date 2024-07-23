@@ -47,30 +47,53 @@ const App = () => {
     return <Login setUser={setUser} />;
   }
 
+  const tokenExpiredMessage = () => {
+    setErrorMessage(
+      'If create new blog or delete does not work, token may have expired. Please login again.'
+    );
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
+  };
+
+  const broadcastSuccessMessage = (message) => {
+    setSuccessMessage(message);
+    setTimeout(() => {
+      setSuccessMessage(null);
+    }, 5000);
+  };
+
+  const broadcastErrorMessage = (message) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
+  };
+
   const createBlog = async (event, newBlog) => {
     event.preventDefault();
 
     if (!newBlog.title || !newBlog.url) {
-      setErrorMessage('New blog must have a title, and URL');
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      broadcastErrorMessage('New blog must have a title, and URL');
     }
 
-    const returnedBlog = await blogService.create(newBlog);
-    const createdBlog = { ...returnedBlog, user: user };
+    let returnedBlog = null;
 
-    setSuccessMessage(
+    try {
+      returnedBlog = await blogService.create(newBlog);
+    } catch (error) {
+      tokenExpiredMessage();
+      return;
+    }
+
+    broadcastSuccessMessage(
       `New blog "${createdBlog.title}" by ${createdBlog.author} created`
     );
-    setTimeout(() => {
-      setSuccessMessage(null);
-    }, 5000);
 
     if (blogFormRef) {
       blogFormRef.current.toggleVisibility();
     }
-
+    const createdBlog = { ...returnedBlog, user: user };
     setBlogs((prevBlogs) => {
       return prevBlogs.concat(createdBlog);
     });
@@ -91,11 +114,16 @@ const App = () => {
   };
 
   const handleDelete = async (blog) => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      blogService.remove(blog.id);
-      setBlogs((prevBlogs) => {
-        return prevBlogs.filter((prevBlog) => prevBlog.id !== blog.id);
-      });
+    try {
+      if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+        blogService.remove(blog.id);
+        setBlogs((prevBlogs) => {
+          return prevBlogs.filter((prevBlog) => prevBlog.id !== blog.id);
+        });
+      }
+    } catch (error) {
+      tokenExpiredMessage();
+      return;
     }
   };
 
