@@ -28,12 +28,12 @@ const Blog = ({ blog, handleLike, handleDelete, currentUser }) => {
 
   return (
     <div className="blog-container">
-      <h2 className="blog-title">
-        {blog.title} &nbsp;
+      <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+        <h2 className="blog-title">{blog.title}</h2>
         <button onClick={() => setShowDetails(!showDetails)}>
           {showDetails ? 'hide' : 'view'}
         </button>
-      </h2>
+      </div>
 
       {showDetails && blogDetails()}
     </div>

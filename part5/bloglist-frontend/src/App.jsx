@@ -75,6 +75,7 @@ const App = () => {
 
     if (!newBlog.title || !newBlog.url) {
       broadcastErrorMessage('New blog must have a title, and URL');
+      return;
     }
 
     let returnedBlog = null;
@@ -87,7 +88,7 @@ const App = () => {
     }
 
     broadcastSuccessMessage(
-      `New blog "${createdBlog.title}" by ${createdBlog.author} created`
+      `New blog "${returnedBlog.title}" by ${returnedBlog.author} created`
     );
 
     if (blogFormRef) {
@@ -140,18 +141,20 @@ const App = () => {
       </Togglable>
 
       <h2>blogs wall</h2>
-      {blogs
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <Blog
-            currentUser={user}
-            key={blog.id}
-            blog={blog}
-            handleLike={handleLike}
-            handleDelete={handleDelete}
-            setBlogs={setBlogs}
-          />
-        ))}
+      <div data-testid="blogs">
+        {blogs
+          .sort((a, b) => b.likes - a.likes)
+          .map((blog) => (
+            <Blog
+              currentUser={user}
+              key={blog.id}
+              blog={blog}
+              handleLike={handleLike}
+              handleDelete={handleDelete}
+              setBlogs={setBlogs}
+            />
+          ))}
+      </div>
     </div>
   );
 };
