@@ -124,8 +124,63 @@ Add a `<Provider store={store}> ... </Provider>` into App.jsx
 * Container Component: Contains app logic, defines XXX, coordinates some cofiguration.
 
 
+### Many Reducers
+
+#### CombineReducer Complex State
+**Store with Complex State**
+Taking the notes app as the example, we will implement filtering by storing both the notes and value of filter in the redux store.
+* Define separate reducer for state of filter (`filterReducer = (state, action) => {}`)
+* Action for the reducer: `{type: 'SET_FILTER', payload: 'IMPORTANT'}`
+* Action Creator function:
+```js
+const filterReducer = (state = 'ALL', action) => {
+  // ...
+};
+
+export const filterChange = filter => {
+  return {
+    type: 'SET_FILTER',
+    payload: filter,
+  };
+};
+
+export default filterReducer;
+```
+
+We can then create the overall actual reducer to feed into `createStore(reducer)`, by combining the two reducers with the `combineReducers` function.   
+```js
+const reducer = combineReducers({
+  notes: noteReducer,
+  filter: filterReducer,
+})
+```
+* State of store defined by reducer is object with two properties, each property value defined by the respective reducer.
+
+#### Redux Toolkit
+
+Redux's configuration and state management implementation requirest a bit of effort, and code has somewhat rept boilerplate code. Redux Toolkit is a library that solves common Redux-related problems, simplify configuration of the Redux store and offers large variety of tools to east state management.
+* `npm install @reduxjs/tookit`
+
+Some changes include:
+* Using Redux Toolkit's `configureStore` function instead of Redux's `createStore`
+* Easily create reducer and related action creators using `createSlice` function.
+* We can use the `current` function from the immer library to log the current state.
+
+Redux DevTools (chrome addon) also offers useful dev tools for Redux.
+* Allows inspecting Redux store's state and dispatch actions through the browser console.
 
 
+
+
+
+### Rough time breakdown
+
+(with extensive breaks in between, due to intern workload)
+
+A. roughly 4 hrs
+B. roughly 2/3 hrs
+C. roughly  hrs
+D. roughly  hrs
 
 
 
