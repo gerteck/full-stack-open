@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { voteAnecdote } from "../reducers/anecdoteReducer";
 
+// The AnecdotesList component is responsible for rendering the anecdotes and the buttons for voting on them.
 const AnecdotesList = () => {
   const dispatch = useDispatch();
   const anecdotes = useSelector((state) => state);
