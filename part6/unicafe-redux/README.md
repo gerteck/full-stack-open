@@ -1,3 +1,7 @@
+# Unicafe Redux
+
+Uni(versity) Cafe feedback system to test using Redux for state management.
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
