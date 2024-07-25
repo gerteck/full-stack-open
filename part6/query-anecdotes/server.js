@@ -1,12 +1,11 @@
 import jsonServer from 'json-server';
+import cors from 'cors';
 
 const server = jsonServer.create();
 const router = jsonServer.router('db.json');
 const middlewares = jsonServer.defaults();
 
 const validator = (request, response, next) => {
-  console.log();
-
   const { content } = request.body;
 
   if (request.method === 'POST' && (!content || content.length < 5)) {
@@ -18,6 +17,7 @@ const validator = (request, response, next) => {
   }
 };
 
+server.use(cors());
 server.use(middlewares);
 server.use(jsonServer.bodyParser);
 server.use(validator);

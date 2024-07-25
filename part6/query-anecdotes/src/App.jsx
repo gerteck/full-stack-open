@@ -1,30 +1,16 @@
 import AnecdoteForm from "./components/AnecdoteForm";
+import AnecdoteList from "./components/AnecdoteList";
 import Notification from "./components/Notification";
 
-import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
-import { getAll, vote } from "./requests";
+import { useQuery } from "@tanstack/react-query";
+import { getAll } from "./requests";
 
 const App = () => {
-  const queryClient = useQueryClient();
-
-  const voteMutation = useMutation({
-    mutationFn: vote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["anecdotes"] });
-    },
-  });
-
-  const handleVote = (anecdote) => {
-    voteMutation.mutate(anecdote);
-  };
-
   const result = useQuery({
     queryKey: ["anecdotes"],
     queryFn: getAll,
     retry: 1,
   });
-
-  // console.log(JSON.parse(JSON.stringify(result)));
 
   const anecdotes = result.data;
 
@@ -45,16 +31,7 @@ const App = () => {
 
       <Notification />
       <AnecdoteForm />
-
-      {anecdotes.map((anecdote) => (
-        <div key={anecdote.id}>
-          <div>{anecdote.content}</div>
-          <div>
-            has {anecdote.votes}
-            <button onClick={() => handleVote(anecdote)}>vote</button>
-          </div>
-        </div>
-      ))}
+      <AnecdoteList anecdotes={anecdotes} />
     </div>
   );
 };
