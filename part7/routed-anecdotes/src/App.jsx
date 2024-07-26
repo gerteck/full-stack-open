@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Route, Routes, Link, useParams, useNavigate } from "react-router-dom";
+import { useField } from "./hooks";
 
 const Menu = () => {
   const padding = {
@@ -45,7 +46,7 @@ const About = () => (
       more general than the brief tale itself, such as to characterize a person
       by delineating a specific quirk or trait, to communicate an abstract idea
       about a person, place, or thing through the concrete details of a short
-      narrative. An anecdote is "a story with a point."
+      narrative. An anecdote is a &#34;story with a point.&#34;
     </em>
 
     <p>
@@ -67,18 +68,25 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [info, setInfo] = useState("");
+  const { reset: resetContent, ...content } = useField("text");
+  const { reset: resetText, ...author } = useField("text");
+  const { reset: resetInfo, ...info } = useField("text");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0,
     });
+  };
+
+  const handleReset = (e) => {
+    e.preventDefault();
+    resetContent();
+    resetText();
+    resetInfo();
   };
 
   return (
@@ -86,30 +94,16 @@ const CreateNew = (props) => {
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          content
-          <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
+          content <input name="content" {...content} />
         </div>
         <div>
-          author
-          <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
+          author <input name="author" {...author} />
         </div>
         <div>
-          url for more info
-          <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
-          />
+          url for more info <input name="info" {...info} />
         </div>
         <button>create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   );
@@ -180,6 +174,7 @@ const App = () => {
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
 
+  // eslint-disable-next-line no-unused-vars
   const vote = (id) => {
     const anecdote = anecdoteById(id);
 
