@@ -93,11 +93,88 @@ We can also define an element (e.g. footer, at bottom of screen) outside of Rout
 
 ### Custom Hooks
 
+> Hooks are functions that let you 'hook' into React state and lifecycle features from functoin components.
 
+React offers 15 built in hooks, including `useState` and `useEffect` hooks. 
+* `useImperativeHandle` hook to allow components to provide functions to other components. 
+* `useReducer`, `useContext` to implement a Redux like state management.
 
+Many React libraries have begun to offer hook-based APIs.
+* `useSelector`, `useDispatch` hooks from react-redux library to share redux-store and dispatch function to components.
+* React Router's API is also partially hook-based. Hooks can be used to access URL parameters and navigation object, allowing manipulation of browser URL.
 
+**Hooks Rules & Limitations**
+Hooks are not normal functions, and when using them, there are certain rules and limitations. From React documentation:
+* Don't call hooks inside loops, conditions or nested functions. Always use Hooks at the top level of your React function.
+* Can only call Hooks while React is rendering a function component
+  * Call at top level in body of function component
+  * Call at top level in body of a custom Hook.
+* ESlint plugin can be used to verify application uses hooks correctly
 
+**Custom Hooks**
 
+React allows creation of custom hooks, which primary purpose is to faciliate reuse of logic used in components. ("Extract component logic into reusable functions").
+* Custom hooks are regular JS functions that can use any other hooks, as long as they adhere to the rules of hooks. 
+* Name of custom hooks must start with the word `use`.
+
+**Sample Counter Hook**
+A simple sample counter custom hook here:
+```js
+const useCounter = () => {
+  const [value, setValue] = useState(0)
+
+  const increase = () => {
+    setValue(value + 1)
+  }
+
+  const decrease = () => {
+    setValue(value - 1)
+  }
+
+  const zero = () => {
+    setValue(0)
+  }
+
+  return {
+    value, 
+    increase,
+    decrease,
+    zero
+  }
+}
+
+...
+const counter = useCounter();
+```
+The custom hook uses `useState` hook internally to create its state, and the hook returns an object, properties of which include value and functions for manipulating its value.
+* This extracts the state and manipulation entirely into the `useCounter()` hook.
+* Managing state and logic now responsibility of the custom hook.
+* Same hook can be reused in the application.
+* Using the hook repeatedly will create completely separate counters.
+
+**Sample Form Hook**:
+```js
+const useField = (type) => {
+  const [value, setValue] = useState('')
+
+  const onChange = (event) => {
+    setValue(event.target.value)
+  }
+
+  return {
+    type,
+    value,
+    onChange
+  }
+}
+
+...
+const name = useField('text');
+<input type={name.type} value={name.value} onChange={name.onChange}/>
+<input {...name}/>
+```
+
+Overall, custom hooks are not only a tool for reusing code, but provide a better way for dividiing it into smaller modular parts.
 
 
 
@@ -116,9 +193,7 @@ We can also define an element (e.g. footer, at bottom of screen) outside of Rout
 
 ### Rough time breakdown
 
-(with extensive breaks in between, due to intern workload)
-
-A. roughly  hrs
+A. roughly 1 hr
 B. roughly  hrs
 C. roughly  hrs
 D. roughly  hrs
