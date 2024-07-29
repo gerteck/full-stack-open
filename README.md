@@ -23,6 +23,10 @@ Core Components:
 * Part6: Advanced state management
 * Part7: React router, custom hooks, styling app with CSS and webpack
 
+### Certificate For Parts0-7
+
+![](/images/7-certificate-fullstack-grade5-7.png)
+
 Additional Components:
 
 * Part8: GraphQL
