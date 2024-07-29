@@ -417,5 +417,4 @@ B. roughly 2/3 hrs
 C. roughly 1 hrs (Exercises in Part F)
 D. roughly 1 hrs
 E. roughly 1 hrs
-F. roughly  hrs
-
+F. roughly 8 hrs
